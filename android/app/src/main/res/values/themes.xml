@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TataSky</string>
+    <string name="choose_hdmi">Select your DTH HDMI port</string>
+    <string name="hdmi_port">HDMI port %1$d</string>
+    <color name="splash_background">#080D1B</color>
+    <style name="Theme.TataSky" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@drawable/launch_background</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:navigationBarColor">@color/splash_background</item>
+    </style>
+</resources>
