@@ -1,4 +1,4 @@
-name: NetMirror Android release
+name: Android TV HDMI Switcher release
 
 on:
   push:
@@ -76,10 +76,10 @@ jobs:
         run: |
           for release_attempt in 1 2 3 4 5; do
             gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/tags?per_page=100" \
-              > "$RUNNER_TEMP/netmirror-tags.json"
+              > "$RUNNER_TEMP/androidtvhdmiswitch-tags.json"
             release_tag="$(jq -r \
               '"1.0." + (([.[][] | .name | select(test("^1\\.0\\.[0-9]+$")) | split(".")[2] | tonumber] | max // 0) + 1 | tostring)' \
-              "$RUNNER_TEMP/netmirror-tags.json")"
+              "$RUNNER_TEMP/androidtvhdmiswitch-tags.json")"
             # Reserve the version at this exact commit so concurrent builds cannot reuse it.
             if gh api --method POST "repos/$GITHUB_REPOSITORY/git/refs" \
               -f "ref=refs/tags/$release_tag" -f "sha=$GITHUB_SHA" --silent; then
@@ -92,39 +92,39 @@ jobs:
               exit 1
             fi
           done
-          echo "NETMIRROR_RELEASE_VERSION=$release_tag" >> "$GITHUB_ENV"
-          cp app/build/outputs/apk/release/*.apk "$RUNNER_TEMP/netmirror_${release_tag}.apk"
-          cp app/build/outputs/bundle/release/*.aab "$RUNNER_TEMP/netmirror_${release_tag}.aab"
-          cp app/build/outputs/mapping/release/mapping.txt "$RUNNER_TEMP/netmirror_${release_tag}_mapping.txt"
+          echo "ANDROIDTVHDMISWITCH_RELEASE_VERSION=$release_tag" >> "$GITHUB_ENV"
+          cp app/build/outputs/apk/release/*.apk "$RUNNER_TEMP/androidtvhdmiswitch_${release_tag}.apk"
+          cp app/build/outputs/bundle/release/*.aab "$RUNNER_TEMP/androidtvhdmiswitch_${release_tag}.aab"
+          cp app/build/outputs/mapping/release/mapping.txt "$RUNNER_TEMP/androidtvhdmiswitch_${release_tag}_mapping.txt"
           if [ -f app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip ]; then
-            cp app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip "$RUNNER_TEMP/netmirror_${release_tag}_native-symbols.zip"
+            cp app/build/outputs/native-debug-symbols/release/native-debug-symbols.zip "$RUNNER_TEMP/androidtvhdmiswitch_${release_tag}_native-symbols.zip"
           fi
 
       - name: Upload signed release APK
         uses: actions/upload-artifact@v7
         with:
-          path: ${{ runner.temp }}/netmirror_${{ env.NETMIRROR_RELEASE_VERSION }}.apk
+          path: ${{ runner.temp }}/androidtvhdmiswitch_${{ env.ANDROIDTVHDMISWITCH_RELEASE_VERSION }}.apk
           archive: false
           if-no-files-found: error
 
       - name: Upload signed release AAB
         uses: actions/upload-artifact@v7
         with:
-          path: ${{ runner.temp }}/netmirror_${{ env.NETMIRROR_RELEASE_VERSION }}.aab
+          path: ${{ runner.temp }}/androidtvhdmiswitch_${{ env.ANDROIDTVHDMISWITCH_RELEASE_VERSION }}.aab
           archive: false
           if-no-files-found: error
 
       - name: Upload R8 mapping file
         uses: actions/upload-artifact@v7
         with:
-          path: ${{ runner.temp }}/netmirror_${{ env.NETMIRROR_RELEASE_VERSION }}_mapping.txt
+          path: ${{ runner.temp }}/androidtvhdmiswitch_${{ env.ANDROIDTVHDMISWITCH_RELEASE_VERSION }}_mapping.txt
           archive: false
           if-no-files-found: error
 
       - name: Upload native debug symbols
         uses: actions/upload-artifact@v7
         with:
-          path: ${{ runner.temp }}/netmirror_${{ env.NETMIRROR_RELEASE_VERSION }}_native-symbols.zip
+          path: ${{ runner.temp }}/androidtvhdmiswitch_${{ env.ANDROIDTVHDMISWITCH_RELEASE_VERSION }}_native-symbols.zip
           archive: false
           if-no-files-found: ignore
 
@@ -133,17 +133,17 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           release_files=(
-            "$RUNNER_TEMP/netmirror_${NETMIRROR_RELEASE_VERSION}.apk"
-            "$RUNNER_TEMP/netmirror_${NETMIRROR_RELEASE_VERSION}.aab"
-            "$RUNNER_TEMP/netmirror_${NETMIRROR_RELEASE_VERSION}_mapping.txt"
+            "$RUNNER_TEMP/androidtvhdmiswitch_${ANDROIDTVHDMISWITCH_RELEASE_VERSION}.apk"
+            "$RUNNER_TEMP/androidtvhdmiswitch_${ANDROIDTVHDMISWITCH_RELEASE_VERSION}.aab"
+            "$RUNNER_TEMP/androidtvhdmiswitch_${ANDROIDTVHDMISWITCH_RELEASE_VERSION}_mapping.txt"
           )
-          if [ -f "$RUNNER_TEMP/netmirror_${NETMIRROR_RELEASE_VERSION}_native-symbols.zip" ]; then
-            release_files+=("$RUNNER_TEMP/netmirror_${NETMIRROR_RELEASE_VERSION}_native-symbols.zip")
+          if [ -f "$RUNNER_TEMP/androidtvhdmiswitch_${ANDROIDTVHDMISWITCH_RELEASE_VERSION}_native-symbols.zip" ]; then
+            release_files+=("$RUNNER_TEMP/androidtvhdmiswitch_${ANDROIDTVHDMISWITCH_RELEASE_VERSION}_native-symbols.zip")
           fi
-          gh release create "$NETMIRROR_RELEASE_VERSION" "${release_files[@]}" \
+          gh release create "$ANDROIDTVHDMISWITCH_RELEASE_VERSION" "${release_files[@]}" \
             --repo "$GITHUB_REPOSITORY" \
             --verify-tag \
-            --title "netmirror_${NETMIRROR_RELEASE_VERSION}" \
+            --title "androidtvhdmiswitch_${ANDROIDTVHDMISWITCH_RELEASE_VERSION}" \
             --generate-notes \
             --latest
 
