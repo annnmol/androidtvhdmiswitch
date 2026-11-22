@@ -1,6 +1,8 @@
-# Netmirror
+# Android TV HDMI SWITCH
 
-A simple native Android app built with Kotlin and Jetpack Compose.
+Quickly switch between HDMI input on app launch. The app is designed for Android TV devices and provides a seamless experience for users who want to change HDMI inputs without navigating through multiple menus.
+
+Example: HDMI PORT 2 for DTH Cable TV
 
 ## Install
 
