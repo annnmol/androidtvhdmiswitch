@@ -40,10 +40,10 @@ class MainActivity : Activity() {
     }
 
     private fun switchToHdmi(port: Int) {
-        // Fixed Hisense/MediaTek mapping: HDMI 1 -> HW4, HDMI 2 -> HW5, etc.
-        // Reference: https://gist.github.com/zehuanli/158f0420040f5dee4b11a30ac64d9c1d
-        // HDMI 4 uses HW7 by the same numbering; no firmware or input checks are made.
-        val inputId = "com.mediatek.tvinput/.hdmi.HDMIInputService/HW${port + 3}"
+        // Verified on this Hisense TV: HDMI 1 -> HW4, HDMI 2 -> HW5, HDMI 3 -> HW6.
+        // The MediaTek Live TV app handles playback, but Hisense owns the inputs.
+        // An unregistered MediaTek input ID opens Live TV's last source instead.
+        val inputId = "com.hisense.tv.hitvinput/.hdmi.HdmiTvInputService/HW${port + 3}"
         startActivity(
             Intent(
                 Intent.ACTION_VIEW,
